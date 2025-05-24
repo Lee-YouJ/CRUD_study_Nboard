@@ -1,0 +1,21 @@
+{{>layouts/header}}
+
+<h2>
+    {{post.title}}
+    {{#post.studyType}}
+        <span class="badge bg-secondary" style="font-size: 0.8rem;">{{.}}</span>
+    {{/post.studyType}}
+</h2>
+<p>{{post.content}}</p>
+<p>마감일: {{post.deadline}}</p>
+
+<div style="display: flex; gap: 10px;">
+    <form method="post" action="/admin/{{post.id}}/delete">
+        <button type="submit">스터디 삭제하기</button>
+    </form>
+    <form method="get" action="/admin/{{post.id}}/edit">
+        <button type="submit">스터디 수정하기</button>
+    </form>
+    <button onclick="location.href='/admin/list'">목록으로 돌아가기</button>
+</div>
+{{>layouts/footer}}

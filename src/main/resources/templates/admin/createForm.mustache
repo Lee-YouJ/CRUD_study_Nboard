@@ -1,0 +1,47 @@
+{{> layouts/header }}
+
+<div class="container mt-5">
+    <h1>스터디 생성</h1>
+    <form action="/admin/new" method="post">
+        <div class="mb-3">
+            <div class="form-group">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-group">
+                <label for="content" class="form-label">내용</label>
+                <textarea class="form-control" id="content" name="content" ></textarea>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-group">
+                <label for="category" class="form-label">카테고리</label>
+                <select class="form-select" id="category" name="category">
+                    <option value="카테고리1">카테고리1</option>
+                    <option value="카테고리2">카테고리2</option>
+                    <option value="카테고리3">카테고리3</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="studyType" class="form-label">진행 방식</label>
+            <select class="form-select" id="studyType" name="studyType">
+                <option value="online">online</option>
+                <option value="offline">offline</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <div class="form-group">
+                <label for="duration" class="form-label">모집기간(일)</label>
+                <input type="number" class="form-control" id="duration" name="duration" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">등록</button>
+        <a href="/admin/list" class="btn btn-secondary ms-2">취소</a>
+    </form>
+</div>
+
+{{> layouts/footer }}

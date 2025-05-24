@@ -1,0 +1,18 @@
+{{>layouts/header}}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>스터디 목록</title>
+</head>
+<body>
+<h1>스터디 모집 게시판</h1>
+<ul>
+    {{#studyPosts}}
+        <li>
+            {{title}} | {{field}} | {{region}} | {{deadline}}
+        </li>
+    {{/studyPosts}}
+</ul>
+</body>
+</html>
+{{>layouts/footer}}

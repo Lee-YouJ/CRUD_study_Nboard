@@ -1,0 +1,21 @@
+
+{{>layouts/header}}
+<h1>스터디 목록 (관리자용)</h1>
+
+<ul>
+    {{#posts}}
+        <li>
+            <a href="/admin/{{id}}">
+                {{title}} /
+                {{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}} /
+                (마감일: {{deadline}})
+            </a>
+        </li>
+    {{/posts}}
+</ul>
+
+<div style="display: flex; gap: 10px;">
+    <a href="/admin/new"><button>스터디 생성</button></a>
+    <button onclick="location.href='/admin/applications'" class="btn btn-secondary">신청자 목록</button>
+</div>
+{{>layouts/footer}}

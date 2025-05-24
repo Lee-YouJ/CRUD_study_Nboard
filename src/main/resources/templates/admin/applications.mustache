@@ -1,0 +1,37 @@
+<h1>신청자 목록</h1>
+<table class="table" border="1">
+    <thead>
+    <tr>
+        <th>신청자</th>
+        <th>스터디</th>
+        <th>상태</th>
+        <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#applications}}
+        <tr>
+            <td>{{username}}</td>
+            <td>{{studyPost.title}}</td>
+            <td>{{status}}</td>
+            <td>
+                {{^isApprovalCheck}}
+                    <form action="/admin/applications/{{id}}/approve" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-success btn-sm">승인</button>
+                    </form>
+                    <form action="/admin/applications/{{id}}/reject" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">거절</button>
+                    </form>
+                {{/isApprovalCheck}}
+            </td>
+        </tr>
+    {{/applications}}
+    {{^applications}}
+        <tr><td colspan="4">신청이 없습니다.</td></tr>
+    {{/applications}}
+    </tbody>
+</table>
+<br>
+<button onclick="location.href='/admin/list'">목록으로 돌아가기</button>
+
+{{> layouts/footer}}

@@ -1,0 +1,21 @@
+
+{{>layouts/header}}
+<h1>스터디 목록</h1>
+
+<ul>
+    {{#posts}}
+        <li>
+            <a href="/study/{{id}}">
+                {{title}} /
+                {{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}} /
+                (마감일: {{deadline}})
+            </a>
+        </li>
+    {{/posts}}
+</ul>
+
+<div style="display: flex; gap: 10px;">
+    <button onclick="location.href='/study/test'">성향 테스트</button>
+    <button onclick="location.href='/study/myStudy'" class="btn btn-secondary">나의 스터디 목록</button>
+</div>
+{{>layouts/footer}}

@@ -1,0 +1,29 @@
+{{> layouts/header }}
+
+<div class="container mt-5">
+    <h1>성향 테스트</h1>
+    <br>
+    <form action="/study/test" method="post">
+        <div class="mb-3">
+            <div class="form-group">
+                <label class="form-label">온라인을 선호하십니까? 오프라인을 선호하십니까? (온라인 : 1 / 오프라인 : 2)</label>
+                <input type="number" name="q1" min="1" max="2" class="form-control">
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-group">
+                <label class="form-label">듣고 싶은 수업이 소프트웨어 수업이신가요? 데이터 시각화 수업이신가요? (소프트웨어 : 1 / 데이터 시각화 : 2)</label>
+                <input type="number" name="q2" min="1" max="2" class="form-control">
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-group">
+                <label class="form-label">주중과 주말 중 어느 것을 더 선호하시는가요? (주중 : 1 / 주말 : 2)</label>
+                <input type="number" name="q3" min="1" max="5" class="form-control">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">제출</button>
+    </form>
+</div>
+
+{{> layouts/footer }}

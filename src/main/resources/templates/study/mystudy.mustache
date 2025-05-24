@@ -1,0 +1,15 @@
+{{>layouts/header}}
+
+<h2>가입한 스터디 목록</h2>
+<ul>
+    {{#myStudyPosts}}
+        <li>
+            {{title}} (마감일: {{deadline}})
+            → 상태: {{statusLabel}}
+        </li>
+    {{/myStudyPosts}}
+
+    {{^myStudyPosts}}
+        <li>가입 신청한 스터디가 없습니다.</li>
+    {{/myStudyPosts}}
+</ul>

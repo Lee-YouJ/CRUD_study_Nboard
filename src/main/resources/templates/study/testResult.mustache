@@ -1,0 +1,9 @@
+{{>layouts/header}}
+<h1>성향 테스트 결과: {{result}}</h1>
+<h2>추천 스터디</h2>
+<ul>
+    {{#recommended}}
+        <li><a href="/study/{{id}}">{{title}}</a></li>
+    {{/recommended}}
+</ul>
+{{>layouts/footer}}

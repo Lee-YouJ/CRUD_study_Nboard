@@ -1,0 +1,11 @@
+{{>layouts/header}}
+{{#isDup}}
+    <h1>중복 신청입니다.</h1>
+{{/isDup}}
+{{^isDup}}
+    <h1>가입이 완료되었습니다.</h1>
+    <p>스터디에 성공적으로 신청하셨습니다.</p>
+{{/isDup}}
+<button onclick="location.href='/study'">목록으로 돌아가기</button>
+<button onclick="location.href='/study/myStudy'" class="btn btn-secondary">나의 스터디 목록</button>
+{{>layouts/footer}}

@@ -1,0 +1,30 @@
+{{> layouts/header }}
+
+<div class="container mt-5">
+    <h1>스터디 수정</h1>
+    <form action="/admin/{{studyPost.id}}/edit" method="post">
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{studyPost.title}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea class="form-control" id="content" name="content">{{studyPost.content}}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="studyType" class="form-label">진행 방식</label>
+            <select class="form-select" id="studyType" name="studyType">
+                <option value="online" {{#isOnline}}selected{{/isOnline}}>online</option>
+                <option value="offline" {{#isOffline}}selected{{/isOffline}}>offline</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="duration" class="form-label">모집기간(일)</label>
+            <input type="number" class="form-control" id="duration" name="duration" value="{{studyPost.duration}}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">수정 완료</button>
+        <a href="/admin/{{studyPost.id}}" class="btn btn-secondary ms-2">취소</a>
+    </form>
+</div>
+
+{{> layouts/footer }}
