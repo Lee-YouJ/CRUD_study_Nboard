@@ -1,9 +1,98 @@
 {{>layouts/header}}
-<h1>성향 테스트 결과: {{result}}</h1>
-<h2>추천 스터디</h2>
-<ul>
-    {{#recommended}}
-        <li><a href="/study/{{id}}">{{title}}</a></li>
-    {{/recommended}}
-</ul>
+
+
+<div class="container mt-4"> <!-- ✅ 중앙 정렬 및 여백 추가 -->
+
+<h1>성향 테스트 결과: {{mbtiResult}}</h1>
+
+<div class="mt-3">
+    <h4>MBTI 기반 추천 스터디</h4>
+    {{#recommendedByMbti}}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>제목</th>
+                <th>스터디 종류</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#.}}
+                <tr>
+                    <td><a href="/study/{{id}}">{{title}}</a></td>
+                    <td>{{studyType}}</td>
+                </tr>
+            {{/.}}
+            </tbody>
+        </table>
+    {{/recommendedByMbti}}
+    {{^recommendedByMbti}}
+        <p>추천 스터디가 없습니다.</p>
+    {{/recommendedByMbti}}
+</div>
+
+{{#courseTypeResult}}
+    <div class="mt-3">
+        <h4>선택하신 수업 종류 ({{courseTypeResult}}) 기반 추천 스터디</h4>
+        {{#recommendedByCourseType}}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>스터디 종류</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#.}}
+                    <tr>
+                        <td><a href="/study/{{id}}">{{title}}</a></td>
+                        <td>{{studyType}}</td>
+                    </tr>
+                {{/.}}
+                </tbody>
+            </table>
+        {{/recommendedByCourseType}}
+        {{^recommendedByCourseType}}
+            <p>해당 수업 종류의 추천 스터디가 없습니다.</p>
+        {{/recommendedByCourseType}}
+    </div>
+{{/courseTypeResult}}
+
+{{#preferredDayResult}}
+    <div class="mt-3">
+        <h3>선호하시는 요일 ({{preferredDayResult}}) 기반 추천 스터디</h3>
+        {{#recommendedByPreferredDay}}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>스터디 종류</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#.}}
+                    <tr>
+                        <td><a href="/study/{{id}}">{{title}}</a></td>
+                        <td>{{studyType}}</td>
+                    </tr>
+                {{/.}}
+                </tbody>
+            </table>
+        {{/recommendedByPreferredDay}}
+        {{^recommendedByPreferredDay}}
+            <p>선호하시는 요일에 맞는 스터디가 없습니다.</p>
+        {{/recommendedByPreferredDay}}
+    </div>
+{{/preferredDayResult}}
+
+</div>
+
+<style>
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+        width: 100px; /* 스터디 종류 컬럼 너비 조정 (원하는 값으로 변경 가능) */
+        white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+        overflow: hidden;       /* 넘치는 텍스트 숨김 */
+        text-overflow: ellipsis; /* 말줄임표 (...) 표시 */
+    }
+</style>
 {{>layouts/footer}}

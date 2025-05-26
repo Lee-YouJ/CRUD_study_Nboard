@@ -1,5 +1,6 @@
+{{> layouts/header}}
 <h1>신청자 목록</h1>
-<table class="table" border="1">
+<table class="table table-striped">
     <thead>
     <tr>
         <th>신청자</th>
@@ -12,7 +13,7 @@
     {{#applications}}
         <tr>
             <td>{{username}}</td>
-            <td>{{studyPost.title}}</td>
+            <td><a href="/admin/{{studyPost.id}}">{{studyPost.title}}</a></td>
             <td>{{status}}</td>
             <td>
                 {{^isApprovalCheck}}
@@ -32,6 +33,6 @@
     </tbody>
 </table>
 <br>
-<button onclick="location.href='/admin/list'">목록으로 돌아가기</button>
+<button onclick="location.href='/admin/list'" class="btn btn-primary">목록으로 돌아가기</button>
 
 {{> layouts/footer}}

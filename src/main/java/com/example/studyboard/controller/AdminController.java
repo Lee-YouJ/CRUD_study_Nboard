@@ -2,7 +2,6 @@ package com.example.studyboard.controller;
 
 import com.example.studyboard.entity.StudyPost;
 import com.example.studyboard.service.ApplicationService;
-import com.example.studyboard.service.PersonalityService;
 import com.example.studyboard.service.StudyPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -56,9 +54,27 @@ public class AdminController {
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model,
-                         @ModelAttribute("msg") String msg) {
+                         @ModelAttribute("msg") String msg, RedirectAttributes redirectAttributes) {
         StudyPost post = studyPostService.findById(id);
+
+        if (post == null) {
+            // 해당 ID의 스터디가 없으면 메시지를 담고 목록 페이지로 리다이렉트
+            redirectAttributes.addFlashAttribute("error", "해당 ID의 스터디를 찾을 수 없습니다.");
+            return "redirect:/admin/list";
+        }
+
         model.addAttribute("post", post);
+        model.addAttribute("courseType", post.getCourseType());
+
+        String studyDayKo;
+        if ("weekday".equals(post.getWeekdayOrWeekend())) {
+            studyDayKo = "주중";
+        } else if ("weekend".equals(post.getWeekdayOrWeekend())) {
+            studyDayKo = "주말";
+        } else {
+            studyDayKo = ""; // 또는 다른 기본값
+        }
+        model.addAttribute("studyDayKo", studyDayKo);
 
         // msg가 null이거나 빈 문자열인 경우 model에서 제거
         if (msg == null || msg.trim().isEmpty()) {
@@ -93,9 +109,10 @@ public class AdminController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute StudyPost post) {
+        System.out.println("생성 시 수업 요일: " + post.getWeekdayOrWeekend()); // 👈 이 줄 추가
         post.setCreatedDate(LocalDateTime.now());
         post.setDeadline(post.getCreatedDate().plusDays(post.getDuration()).toLocalDate());
-        post.setWriter("익명 사용자"); // 👈 이 줄을 추가
+        post.setWriter("익명 사용자");
         studyPostService.save(post);
         return "redirect:/admin/list";
     }
@@ -105,17 +122,33 @@ public class AdminController {
     public String editForm(@PathVariable Long id, Model model) {
         StudyPost post = studyPostService.findById(id);
         model.addAttribute("studyPost", post);
+
+        // 수업 요일 정보를 템플릿에서 사용하기 위한 플래그 추가
+        if (post.getWeekdayOrWeekend() != null) {
+            model.addAttribute("isWeekday", post.getWeekdayOrWeekend().equals("weekday"));
+            model.addAttribute("isWeekend", post.getWeekdayOrWeekend().equals("weekend"));
+        } else {
+            model.addAttribute("isWeekday", false);
+            model.addAttribute("isWeekend", false);
+        }
+
         return "admin/editForm";
     }
 
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable Long id, @ModelAttribute StudyPost post) {
         StudyPost existingPost = studyPostService.findById(id);
-        post.setCreatedDate(existingPost.getCreatedDate());
-        // duration을 기반으로 deadline을 새롭게 설정
-        post.setDeadline(post.getCreatedDate().plusDays(post.getDuration()).toLocalDate());
-        studyPostService.save(post);
-        return "redirect:/admin/" + id;
+        if (existingPost != null) {
+            post.setCreatedDate(existingPost.getCreatedDate());
+            post.setClosed(existingPost.getClosed()); // 기존 closed 값 유지
+            // duration을 기반으로 deadline을 새롭게 설정
+            post.setDeadline(post.getCreatedDate().plusDays(post.getDuration()).toLocalDate());
+            studyPostService.save(post);
+            return "redirect:/admin/" + id;
+        } else {
+            // 해당 ID의 스터디가 없을 경우 처리 (예: 오류 메시지, 리다이렉트)
+            return "redirect:/admin/list?error=notfound";
+        }
     }
 
     // 📄 관리자 스터디 신청자 목록 처리
@@ -136,5 +169,4 @@ public class AdminController {
         applicationService.reject(appId);
         return "redirect:/admin/applications";
     }
-
 }

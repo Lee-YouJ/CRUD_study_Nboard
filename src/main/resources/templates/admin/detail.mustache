@@ -6,16 +6,44 @@
         <span class="badge bg-secondary" style="font-size: 0.8rem;">{{.}}</span>
     {{/post.studyType}}
 </h2>
-<p>{{post.content}}</p>
-<p>마감일: {{post.deadline}}</p>
 
-<div style="display: flex; gap: 10px;">
+<p>{{post.content}}</p>
+
+<table class="table">
+    <tbody>
+    <tr>
+        <th scope="row">수업 종류</th>
+        <td>{{courseType}}</td>
+    </tr>
+    <tr>
+        <th scope="row">마감일</th>
+        <td>{{post.deadline}}</td>
+    </tr>
+    <tr>
+        <th scope="row">수업 요일</th>
+        <td>{{post.weekdayOrWeekend}}</td>
+    </tr>
+    <tr>
+        <th scope="row">내용</th>
+        <td>{{post.content}}</td>
+    </tr>
+    </tbody>
+</table>
+
+<div style="display: flex; gap: 10px; margin-top: 20px;">
     <form method="post" action="/admin/{{post.id}}/delete">
-        <button type="submit">스터디 삭제하기</button>
+        <button type="submit" class="btn btn-danger">스터디 삭제하기</button>
     </form>
     <form method="get" action="/admin/{{post.id}}/edit">
-        <button type="submit">스터디 수정하기</button>
+        <button type="submit" class="btn btn-primary">스터디 수정하기</button>
     </form>
-    <button onclick="location.href='/admin/list'">목록으로 돌아가기</button>
+    <button onclick="location.href='/admin/list'" class="btn btn-secondary">목록으로 돌아가기</button>
 </div>
+
 {{>layouts/footer}}
+
+<style>
+    .table th {
+        width: 150px; /* 필요에 따라 너비 조정 */
+    }
+</style>

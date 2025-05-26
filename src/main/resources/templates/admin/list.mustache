@@ -1,21 +1,29 @@
-
 {{>layouts/header}}
-<h1>스터디 목록 (관리자용)</h1>
+<h1>관리자용 스터디 목록</h1>
 
-<ul>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">제목</th>
+        <th scope="col">스터디 종류</th>
+        <th scope="col">신청 마감일</th>
+        <th scope="col">수업 요일</th>
+    </tr>
+    </thead>
+    <tbody>
     {{#posts}}
-        <li>
-            <a href="/admin/{{id}}">
-                {{title}} /
-                {{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}} /
-                (마감일: {{deadline}})
-            </a>
-        </li>
+        <tr>
+            <td><a href="/admin/{{id}}">{{title}}</a></td>
+            <td>{{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}}</td>
+            <td>{{deadline}}</td>
+            <td>{{#weekdayOrWeekend}}({{weekdayOrWeekend}}){{/weekdayOrWeekend}}</td>
+        </tr>
     {{/posts}}
-</ul>
+    </tbody>
+</table>
 
-<div style="display: flex; gap: 10px;">
-    <a href="/admin/new"><button>스터디 생성</button></a>
+<div style="display: flex; gap: 10px; margin-top: 20px;">
+    <a href="/admin/new" class="btn btn-primary">스터디 생성</a>
     <button onclick="location.href='/admin/applications'" class="btn btn-secondary">신청자 목록</button>
 </div>
 {{>layouts/footer}}

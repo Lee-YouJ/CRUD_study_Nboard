@@ -19,6 +19,28 @@
             </select>
         </div>
         <div class="mb-3">
+            <label for="courseType" class="form-label">수업 종류</label>
+            <select class="form-select" id="courseType" name="courseType">
+                <option value="전공">전공</option>
+                <option value="교양">교양</option>
+                <option value="자격증">자격증</option>
+                <option value="기타">기타</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">수업 요일</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="weekdayOrWeekend" id="weekday" value="weekday" {{#isWeekday}}checked{{/isWeekday}}>
+                    <label class="form-check-label" for="weekday">주중</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="weekdayOrWeekend" id="weekend" value="weekend" {{#isWeekend}}checked{{/isWeekend}}>
+                    <label class="form-check-label" for="weekend">주말</label>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
             <label for="duration" class="form-label">모집기간(일)</label>
             <input type="number" class="form-control" id="duration" name="duration" value="{{studyPost.duration}}" required>
         </div>

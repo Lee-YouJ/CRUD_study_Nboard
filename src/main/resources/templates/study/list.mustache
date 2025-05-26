@@ -1,21 +1,29 @@
-
 {{>layouts/header}}
 <h1>스터디 목록</h1>
 
-<ul>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">제목</th>
+        <th scope="col">스터디 종류</th>
+        <th scope="col">신청 마감일</th>
+        <th scope="col">수업 요일</th>
+    </tr>
+    </thead>
+    <tbody>
     {{#posts}}
-        <li>
-            <a href="/study/{{id}}">
-                {{title}} /
-                {{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}} /
-                (마감일: {{deadline}})
-            </a>
-        </li>
+        <tr>
+            <td><a href="/study/{{id}}">{{title}}</a></td>
+            <td>{{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}}</td>
+            <td>{{deadline}}</td>
+            <td>{{#weekdayOrWeekend}}({{weekdayOrWeekend}}){{/weekdayOrWeekend}}</td>
+        </tr>
     {{/posts}}
-</ul>
+    </tbody>
+</table>
 
-<div style="display: flex; gap: 10px;">
-    <button onclick="location.href='/study/test'">성향 테스트</button>
+<div style="display: flex; gap: 10px; margin-top: 20px;">
+    <button onclick="location.href='/study/test'" class="btn btn-primary">성향 테스트</button>
     <button onclick="location.href='/study/myStudy'" class="btn btn-secondary">나의 스터디 목록</button>
 </div>
 {{>layouts/footer}}

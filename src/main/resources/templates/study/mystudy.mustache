@@ -1,15 +1,31 @@
 {{>layouts/header}}
 
 <h2>가입한 스터디 목록</h2>
-<ul>
-    {{#myStudyPosts}}
-        <li>
-            {{title}} (마감일: {{deadline}})
-            → 상태: {{statusLabel}}
-        </li>
-    {{/myStudyPosts}}
 
-    {{^myStudyPosts}}
-        <li>가입 신청한 스터디가 없습니다.</li>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">제목</th>
+        <th scope="col">마감일</th>
+        <th scope="col">상태</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#myStudyPosts}}
+        <tr>
+            <td>{{title}}</td>
+            <td>{{deadline}}</td>
+            <td>{{statusLabel}}</td>
+        </tr>
     {{/myStudyPosts}}
-</ul>
+    {{^myStudyPosts}}
+        <tr>
+            <td colspan="3">가입 신청한 스터디가 없습니다.</td>
+        </tr>
+    {{/myStudyPosts}}
+    </tbody>
+</table>
+
+<button onclick="location.href='/study'" class="btn btn-primary">스터디 목록으로 돌아가기</button>
+
+{{>layouts/footer}}

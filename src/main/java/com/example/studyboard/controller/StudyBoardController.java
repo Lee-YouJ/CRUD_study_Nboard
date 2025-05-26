@@ -1,5 +1,6 @@
 package com.example.studyboard.controller;
 
+import java.util.AbstractMap.SimpleEntry;
 import com.example.studyboard.entity.StudyPost;
 import com.example.studyboard.service.ApplicationService;
 import com.example.studyboard.service.PersonalityService;
@@ -22,9 +23,7 @@ public class StudyBoardController {
     private final ApplicationService applicationService;
     private final PersonalityService personalityService;
 
-    /** ----------------------
-     * 📌 1. 스터디 게시글 목록 및 상세
-     * ---------------------- */
+    /** 1. 스터디 게시글 목록 */
     @GetMapping
     public String list(Model model) {
         List<StudyPost> posts = studyPostService.findAll();
@@ -33,76 +32,117 @@ public class StudyBoardController {
         return "study/list";
     }
 
+    /** 2. 상세 */
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         StudyPost post = studyPostService.findById(id);
         model.addAttribute("post", post);
+        model.addAttribute("courseType", post.getCourseType());
+
+        // 수업 종류에 따른 플래그 설정 (뷰에서 사용하기 위함)
+        String type = post.getStudyType();
+        model.addAttribute("isOnline", "Online".equalsIgnoreCase(type));
+        model.addAttribute("isOffline", "Offline".equalsIgnoreCase(type));
+        model.addAttribute("isOnOff", "On/Off".equalsIgnoreCase(type) || "OnOff".equalsIgnoreCase(type));
+
+        // 수업 요일 정보를 모델에 추가
+        model.addAttribute("weekdayOrWeekend", post.getWeekdayOrWeekend());
+
+        // 🔍 디버깅용 출력
+        System.out.println("확인 (컨트롤러): post.getWeekdayOrWeekend() = " + post.getWeekdayOrWeekend());
+
         return "study/detail";
     }
 
-    /** ----------------------
-     * 📌 2. 글 작성 & 등록
-     * ---------------------- */
+    /** 3. 스터디 생성 폼 */
     @GetMapping("/new")
     public String createForm(Model model) {
         model.addAttribute("studyPost", new StudyPost());
         return "study/createForm";
     }
 
+    /** 4. 스터디 생성 처리 */
     @PostMapping("/new")
     public String create(@ModelAttribute StudyPost post) {
+        // 🔍 디버깅용 출력
+        System.out.println("요일 구분 (폼에서 받은 값): " + post.getWeekdayOrWeekend());
+
         post.setCreatedDate(LocalDateTime.now());
         post.setDeadline(post.getCreatedDate().plusDays(post.getDuration()).toLocalDate());
-        post.setWriter("익명 사용자"); // 👈 이 줄을 추가
+        post.setWriter("익명 사용자");
+        post.setStatus("ONGOING"); // 기본 상태
         studyPostService.save(post);
         return "redirect:/study";
     }
 
-    /** ----------------------
-     * 📌 3. 스터디 신청
-     * ---------------------- */
+    /** 5. 스터디 신청 */
     @PostMapping("/{id}/apply")
     public String apply(@PathVariable Long id, Model model) {
-        String applicant = "익명 사용자"; // 또는 다른 임의의 이름
+        String applicant = "익명 사용자";
         applicationService.applyToStudy(id, applicant);
         model.addAttribute("studyId", id);
         return "study/applyComplete";
     }
 
-    /** ----------------------
-     * 📌 5. 성향 테스트
-     * ---------------------- */
+    /** 6. 성향 테스트 폼 */
     @GetMapping("/test")
     public String personalityTestForm() {
         return "study/testForm";
     }
 
+    /** 7. 성향 테스트 결과 처리 */
     @PostMapping("/test")
     public String processTest(@RequestParam Map<String, String> answers, Model model) {
-        String result = personalityService.analyze(answers);
-        List<StudyPost> recommended = studyPostService.recommendByPersonality(result);
-        model.addAttribute("result", result);
-        model.addAttribute("recommended", recommended);
+        SimpleEntry<SimpleEntry<String, String>, String> analysisResult = personalityService.analyze(answers);
+        SimpleEntry<String, String> personalityAndCourse = analysisResult.getKey();
+        String preferredDayResult = analysisResult.getValue();
+
+        String mbtiResult = personalityAndCourse.getKey();
+        String courseTypeResult = personalityAndCourse.getValue();
+
+        List<StudyPost> recommendedByMbti = studyPostService.recommendByPersonality(mbtiResult);
+        model.addAttribute("mbtiResult", mbtiResult);
+        model.addAttribute("recommendedByMbti", recommendedByMbti);
+
+        if (courseTypeResult != null) {
+            List<StudyPost> recommendedByCourseType = studyPostService.recommendByCourseType(courseTypeResult);
+            model.addAttribute("courseTypeResult", courseTypeResult);
+            model.addAttribute("recommendedByCourseType", recommendedByCourseType);
+        }
+
+        if (preferredDayResult != null) {
+            List<StudyPost> recommendedByPreferredDay = studyPostService.recommendByPreferredDay(preferredDayResult);
+            model.addAttribute("preferredDayResult", (preferredDayResult.equals("weekday") ? "주중" : "주말"));
+            model.addAttribute("recommendedByPreferredDay", recommendedByPreferredDay);
+        }
+
         return "study/testResult";
     }
 
-    /** ----------------------
-     * 📌 6. 내가 가입한 스터디
-     * ---------------------- */
+    /** 8. 내가 가입한 스터디 목록 */
     @GetMapping("/myStudy")
     public String myStudy(Model model) {
         String username = "익명 사용자";
         List<StudyPost> myStudyPosts = applicationService.findStudyPostsByUsername(username);
 
-        // 리스트가 비어있지 않을 때만 로그 출력
-        if (!myStudyPosts.isEmpty()) {
-            System.out.println("myStudyPosts ==> " + myStudyPosts.get(0).getStatusLabel());
-        } else {
-            System.out.println("myStudyPosts가 비어 있습니다.");
+        for (StudyPost post : myStudyPosts) {
+            String status = post.getStatus();
+            String statusLabel;
+            switch (status) {
+                case "ONGOING":
+                    statusLabel = "진행 중";
+                    break;
+                case "CLOSED":
+                    statusLabel = "마감";
+                    break;
+                default:
+                    statusLabel = status;
+                    break;
+            }
+            post.setStatusLabel(statusLabel);
         }
 
         model.addAttribute("myStudyPosts", myStudyPosts);
         return "study/myStudy";
     }
-
 }

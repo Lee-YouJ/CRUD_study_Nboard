@@ -1,9 +1,11 @@
 package com.example.studyboard.service;
-import com.example.studyboard.repository.StudyPostRepository;
-import lombok.RequiredArgsConstructor;
+
 import com.example.studyboard.entity.Application;
 import com.example.studyboard.entity.StudyPost;
 import com.example.studyboard.repository.ApplicationRepository;
+import com.example.studyboard.repository.StudyPostRepository;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +21,7 @@ public class ApplicationService {
     private final StudyPostRepository studyPostRepository;
 
     public void applyToStudy(Long postId, String username) {
-        System.out.println("postId==>"+postId);
+        System.out.println("postId==>" + postId);
         StudyPost studyPost = studyPostRepository.findById(postId).orElse(null);
         if (studyPost == null) {
             System.out.println("Error: StudyPost with ID " + postId + " not found.");
@@ -39,7 +41,7 @@ public class ApplicationService {
         System.out.println("appId ==> " + appId);
         Application app = applicationRepository.findById(appId).orElse(null);
         boolean isDupCheck = false;
-        if(app != null) {
+        if (app != null) {
             isDupCheck = Objects.equals(app.getUsername(), username);
         }
         return isDupCheck;
@@ -52,7 +54,6 @@ public class ApplicationService {
 
         // 관련 StudyPost의 상태를 업데이트
         StudyPost studyPost = app.getStudyPost();
-        // 스터디 상태를 "진행 중"으로 변경하는 예시
         if (studyPost != null) {
             studyPost.setStatus("ONGOING");
             studyPostRepository.save(studyPost);
@@ -66,7 +67,6 @@ public class ApplicationService {
 
         // 관련 StudyPost의 상태를 업데이트
         StudyPost studyPost = app.getStudyPost();
-        // 스터디 상태를 "진행 중"으로 변경하는 예시
         if (studyPost != null) {
             studyPost.setStatus("REJECTED");
             studyPostRepository.save(studyPost);

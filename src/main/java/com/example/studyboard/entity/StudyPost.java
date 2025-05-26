@@ -6,13 +6,11 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 public class StudyPost {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,31 +18,47 @@ public class StudyPost {
     private String title;
     private String content;
     private String writer;
-    private LocalDate deadline;
-    // private String category; // 제거된 필드
-
-    private String status; // 스터디 상태를 나타내는 필드 (예: APPLYING, ONGOING, CLOSED)
     private LocalDateTime createdDate;
-    private int duration; // 스터디 기간 (일 수)
-    private boolean closed; // 스터디 마감 여부
+    private LocalDate deadline;
+    private Integer duration;
+    private String studyType;
+    private String courseType;
+    private String mbtiType;
+    private String status;
+    private Boolean closed = false; // 기본값을 false로 설정
 
-    private String mbtiType;        // 성향 : I/E
-    private String studyType;       // Online / Offline / on/off
+    private String weekdayOrWeekend; // 추가된 필드
 
-    public String getStatusLabel() {
-        System.out.println("this.status==> "+this.status);
-        if (this.status != null) {
-            return switch (this.status) {
-                case "APPLYING" -> "신청 가능";
-                case "ONGOING" -> "진행 중";
-                case "CLOSED" -> "마감됨";
-                case "REJECTED" -> "거절됨";
-                default -> "알 수 없음";
-            };
-        }
-        return "알 수 없음";
+    @Setter
+    @Getter
+    @Transient // DB에 매핑하지 않음
+    private String statusLabel;
+
+    // 기본 생성자
+    public StudyPost() {
     }
-    
-    @OneToMany (mappedBy = "studyPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Application> applications = new ArrayList<>();
+
+    // 필드를 초기화하는 생성자 (필요에 따라 추가)
+    public StudyPost(String title, String content, String studyType, String courseType, Integer duration, String weekdayOrWeekend) {
+        this.title = title;
+        this.content = content;
+        this.studyType = studyType;
+        this.courseType = courseType;
+        this.duration = duration;
+        this.weekdayOrWeekend = weekdayOrWeekend;
+        this.createdDate = LocalDateTime.now();
+        this.deadline = this.createdDate.plusDays(duration).toLocalDate();
+        this.writer = "익명 사용자";
+        this.status = "ONGOING";
+        this.closed = false;
+    }
+
+    public String getWeekdayOrWeekend() {
+        if ("weekday".equals(this.weekdayOrWeekend)) {
+            return "주중";
+        } else if ("weekend".equals(this.weekdayOrWeekend)) {
+            return "주말";
+        }
+        return this.weekdayOrWeekend; // 기존 값 반환 (혹시 다른 값이 있을 경우를 대비)
+    }
 }
