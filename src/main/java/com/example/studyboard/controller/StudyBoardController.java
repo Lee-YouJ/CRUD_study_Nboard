@@ -47,7 +47,7 @@ public class StudyBoardController {
         model.addAttribute("isOffline", "Offline".equalsIgnoreCase(type));
         model.addAttribute("isOnOff", "On/Off".equalsIgnoreCase(type) || "OnOff".equalsIgnoreCase(type));
 
-        // 수업 요일 정보를 모델에 추가
+        // 진행 요일 정보를 모델에 추가
         model.addAttribute("weekdayOrWeekend", post.getWeekdayOrWeekend());
 
         // 🔍 디버깅용 출력

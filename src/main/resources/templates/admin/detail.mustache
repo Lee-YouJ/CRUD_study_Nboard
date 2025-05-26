@@ -20,7 +20,7 @@
         <td>{{post.deadline}}</td>
     </tr>
     <tr>
-        <th scope="row">수업 요일</th>
+        <th scope="row">진행 요일</th>
         <td>{{post.weekdayOrWeekend}}</td>
     </tr>
     <tr>
@@ -40,10 +40,12 @@
     <button onclick="location.href='/admin/list'" class="btn btn-secondary">목록으로 돌아가기</button>
 </div>
 
-{{>layouts/footer}}
+
 
 <style>
     .table th {
         width: 150px; /* 필요에 따라 너비 조정 */
     }
 </style>
+
+{{>layouts/footer}}

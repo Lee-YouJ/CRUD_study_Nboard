@@ -105,7 +105,7 @@ public class AdminController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute StudyPost post) {
-        System.out.println("생성 시 수업 요일: " + post.getWeekdayOrWeekend());
+        System.out.println("생성 시 진행 요일: " + post.getWeekdayOrWeekend());
         post.setCreatedDate(LocalDateTime.now());
         post.setDeadline(post.getCreatedDate().plusDays(post.getDuration()).toLocalDate());
         post.setWriter("익명 사용자");
