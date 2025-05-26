@@ -22,7 +22,8 @@ public class AdminController {
 
     // 관리자 로그인 페이지
     @GetMapping("/login")
-    public String adminLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
+    public String adminLoginPage(@RequestParam(value = "error", required = false)
+                                     String error, Model model) {
         if (error != null) {
             model.addAttribute("error", "아이디 와 비밀번호를 재입력 해주세요");
         }

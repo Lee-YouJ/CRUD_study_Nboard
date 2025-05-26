@@ -16,7 +16,7 @@
             <td><a href="/study/{{id}}">{{title}}</a></td>
             <td>{{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}}</td>
             <td>{{deadline}}</td>
-            <td>{{weekdayOrWeekendLabel}}</td>
+            <td>{{#weekdayOrWeekend}}{{weekdayOrWeekend}}{{/weekdayOrWeekend}}</td>
         </tr>
     {{/posts}}
     </tbody>
