@@ -105,6 +105,8 @@ public class StudyBoardController {
         List<StudyPost> recommendedByMbti = studyPostService.recommendByPersonality(mbtiResult);
         model.addAttribute("mbtiResult", mbtiResult);
         model.addAttribute("recommendedByMbti", recommendedByMbti);
+        model.addAttribute("recommendedByMbtiSize", recommendedByMbti.size());
+
 
         if (courseTypeResult != null) {
             List<StudyPost> recommendedByCourseType = studyPostService.recommendByCourseType(courseTypeResult);

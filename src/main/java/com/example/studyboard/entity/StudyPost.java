@@ -61,4 +61,14 @@ public class StudyPost {
         }
         return this.weekdayOrWeekend; // 기존 값 반환 (혹시 다른 값이 있을 경우를 대비)
     }
+
+    @Transient
+    public String getWeekdayOrWeekendLabel() {
+        if ("weekday".equals(this.weekdayOrWeekend)) {
+            return "주중";
+        } else if ("weekend".equals(this.weekdayOrWeekend)) {
+            return "주말";
+        }
+        return this.weekdayOrWeekend;
+    }
 }
