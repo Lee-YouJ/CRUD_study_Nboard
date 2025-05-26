@@ -83,4 +83,9 @@ public class ApplicationService {
         return applicationRepository.findByStudyPost(post).stream()
                 .anyMatch(app -> "APPROVED".equals(app.getStatus()));
     }
+
+    public List<Application> findByUsername(String username) {
+        return applicationRepository.findByUsername(username);
+    }
+
 }

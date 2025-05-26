@@ -1,6 +1,8 @@
 package com.example.studyboard.controller;
 
 import java.util.AbstractMap.SimpleEntry;
+
+import com.example.studyboard.entity.Application;
 import com.example.studyboard.entity.StudyPost;
 import com.example.studyboard.service.ApplicationService;
 import com.example.studyboard.service.PersonalityService;
@@ -123,26 +125,20 @@ public class StudyBoardController {
     @GetMapping("/myStudy")
     public String myStudy(Model model) {
         String username = "익명 사용자";
-        List<StudyPost> myStudyPosts = applicationService.findStudyPostsByUsername(username);
+        List<Application> applications = applicationService.findByUsername(username);
 
-        for (StudyPost post : myStudyPosts) {
-            String status = post.getStatus();
-            String statusLabel;
-            switch (status) {
-                case "ONGOING":
-                    statusLabel = "진행 중";
-                    break;
-                case "CLOSED":
-                    statusLabel = "마감";
-                    break;
-                default:
-                    statusLabel = status;
-                    break;
-            }
-            post.setStatusLabel(statusLabel);
+        // 상태 라벨 붙이기
+        for (Application app : applications) {
+            String label = switch (app.getStatus()) {
+                case "APPROVED" -> "승인됨";
+                case "REJECTED" -> "거절됨";
+                case "PENDING" -> "대기 중";
+                default -> "알 수 없음";
+            };
+            app.setStatusLabel(label);
         }
 
-        model.addAttribute("myStudyPosts", myStudyPosts);
+        model.addAttribute("applications", applications);
         return "study/myStudy";
     }
 }

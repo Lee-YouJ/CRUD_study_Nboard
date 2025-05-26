@@ -1,10 +1,7 @@
 package com.example.studyboard.entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Id;
 
 
 @Entity
@@ -15,6 +12,9 @@ public class Application {
 
     @ManyToOne
     private StudyPost studyPost;
+
+    @Transient
+    private String statusLabel;
 
     private String username;
     private String status = "PENDING";  // PENDING, APPROVED, REJECTED

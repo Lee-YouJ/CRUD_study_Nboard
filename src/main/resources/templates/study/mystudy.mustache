@@ -11,18 +11,18 @@
     </tr>
     </thead>
     <tbody>
-    {{#myStudyPosts}}
+    {{#applications}}
         <tr>
-            <td>{{title}}</td>
-            <td>{{deadline}}</td>
+            <td>{{studyPost.title}}</td>
+            <td>{{studyPost.deadline}}</td>
             <td>{{statusLabel}}</td>
         </tr>
-    {{/myStudyPosts}}
-    {{^myStudyPosts}}
+    {{/applications}}
+    {{^applications}}
         <tr>
             <td colspan="3">가입 신청한 스터디가 없습니다.</td>
         </tr>
-    {{/myStudyPosts}}
+    {{/applications}}
     </tbody>
 </table>
 
