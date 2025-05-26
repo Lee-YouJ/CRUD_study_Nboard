@@ -1,5 +1,4 @@
 {{>layouts/header}}
-
 <h1>스터디 목록</h1>
 
 <table class="table table-striped">
@@ -17,7 +16,7 @@
             <td><a href="/study/{{id}}">{{title}}</a></td>
             <td>{{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}}</td>
             <td>{{deadline}}</td>
-            <td>{{#weekdayOrWeekend}}({{weekdayOrWeekend}}){{/weekdayOrWeekend}}</td>
+            <td>{{weekdayOrWeekendLabel}}</td>
         </tr>
     {{/posts}}
     </tbody>
@@ -27,7 +26,3 @@
     <button onclick="location.href='/study/test'" class="btn btn-primary">성향 테스트</button>
     <button onclick="location.href='/study/myStudy'" class="btn btn-secondary">나의 스터디 목록</button>
 </div>
-
-</div>
-
-{{>layouts/footer}}

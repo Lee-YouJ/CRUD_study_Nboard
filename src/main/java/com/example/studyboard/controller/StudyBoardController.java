@@ -25,10 +25,10 @@ public class StudyBoardController {
     private final ApplicationService applicationService;
     private final PersonalityService personalityService;
 
-    /** 1. 스터디 게시글 목록 */
+    /** 1. 스터디 게시글 목록 (마감일 순 정렬 적용) */
     @GetMapping
     public String list(Model model) {
-        List<StudyPost> posts = studyPostService.findAll();
+        List<StudyPost> posts = studyPostService.findAllOrderByDeadline();  // 여기 변경
         model.addAttribute("posts", posts);
         model.addAttribute("studyType", "전체");
         return "study/list";
@@ -107,7 +107,6 @@ public class StudyBoardController {
         model.addAttribute("recommendedByMbti", recommendedByMbti);
         model.addAttribute("recommendedByMbtiSize", recommendedByMbti.size());
 
-
         if (courseTypeResult != null) {
             List<StudyPost> recommendedByCourseType = studyPostService.recommendByCourseType(courseTypeResult);
             model.addAttribute("courseTypeResult", courseTypeResult);
@@ -137,7 +136,10 @@ public class StudyBoardController {
                 case "PENDING" -> "대기 중";
                 default -> "알 수 없음";
             };
-            app.setStatusLabel(label);
+            // ✅ StudyPost에 statusLabel 설정
+            if (app.getStudyPost() != null) {
+                app.getStudyPost().setStatusLabel(label);
+            }
         }
 
         model.addAttribute("applications", applications);

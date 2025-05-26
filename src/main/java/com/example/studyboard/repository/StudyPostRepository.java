@@ -13,4 +13,7 @@ public interface StudyPostRepository extends JpaRepository<StudyPost, Long> {
 
     @Query("SELECT p FROM StudyPost p WHERE p.weekdayOrWeekend = :day")
     List<StudyPost> findByWeekdayOrWeekend(@Param("day") String weekdayOrWeekend);
+
+    // 마감일(Deadline) 오름차순 정렬로 모든 스터디글 조회
+    List<StudyPost> findAllByOrderByDeadlineAsc();
 }

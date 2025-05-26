@@ -15,17 +15,16 @@
         <tr>
             <td>{{studyPost.title}}</td>
             <td>{{studyPost.deadline}}</td>
-            <td>{{statusLabel}}</td>
+            <td>{{studyPost.statusLabel}}</td>
         </tr>
     {{/applications}}
+
     {{^applications}}
         <tr>
-            <td colspan="3">가입 신청한 스터디가 없습니다.</td>
+            <td colspan="3" class="text-center">가입 신청한 스터디가 없습니다.</td>
         </tr>
     {{/applications}}
     </tbody>
 </table>
 
-<button onclick="location.href='/study'" class="btn btn-primary">스터디 목록으로 돌아가기</button>
-
-{{>layouts/footer}}
+<a href="/study" class="btn btn-primary">스터디 목록으로</a>

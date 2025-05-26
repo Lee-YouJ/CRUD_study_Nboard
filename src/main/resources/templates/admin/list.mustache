@@ -17,7 +17,7 @@
             <td><a href="/admin/{{id}}">{{title}}</a></td>
             <td>{{#studyType}}{{studyType}}{{/studyType}}{{^studyType}}미지정{{/studyType}}</td>
             <td>{{deadline}}</td>
-            <td>{{#weekdayOrWeekend}}({{weekdayOrWeekend}}){{/weekdayOrWeekend}}</td>
+            <td>{{weekdayOrWeekendLabel}}</td>
         </tr>
     {{/posts}}
     </tbody>
@@ -28,5 +28,4 @@
     <button onclick="location.href='/admin/applications'" class="btn btn-secondary">신청자 목록</button>
 </div>
 
-</div>
 {{>layouts/footer}}

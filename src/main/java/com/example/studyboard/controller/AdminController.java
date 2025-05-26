@@ -20,7 +20,7 @@ public class AdminController {
     private final ApplicationService applicationService;
     private final StudyPostService studyPostService;
 
-    // 🔐 관리자 로그인 페이지
+    // 관리자 로그인 페이지
     @GetMapping("/login")
     public String adminLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
@@ -29,7 +29,7 @@ public class AdminController {
         return "admin/adminLogin";
     }
 
-    // 🔐 로그인 처리
+    // 로그인 처리
     @PostMapping("/login")
     public String adminLogin(@RequestParam String adminId,
                              @RequestParam String adminPw,
@@ -43,10 +43,10 @@ public class AdminController {
         }
     }
 
-    // 📄 관리자 전용 목록 및 스터디 상세 페이지
+    // 관리자 전용 목록 및 스터디 상세 페이지 (마감일 기준 오름차순 정렬 적용)
     @GetMapping("/list")
     public String list(Model model) {
-        List<StudyPost> posts = studyPostService.findAll();
+        List<StudyPost> posts = studyPostService.findAllOrderByDeadline(); // 수정된 부분
         model.addAttribute("posts", posts);
         model.addAttribute("studyPost", "관리자용 목록");
         return "admin/list";
@@ -58,7 +58,6 @@ public class AdminController {
         StudyPost post = studyPostService.findById(id);
 
         if (post == null) {
-            // 해당 ID의 스터디가 없으면 메시지를 담고 목록 페이지로 리다이렉트
             redirectAttributes.addFlashAttribute("error", "해당 ID의 스터디를 찾을 수 없습니다.");
             return "redirect:/admin/list";
         }
@@ -72,13 +71,12 @@ public class AdminController {
         } else if ("weekend".equals(post.getWeekdayOrWeekend())) {
             studyDayKo = "주말";
         } else {
-            studyDayKo = ""; // 또는 다른 기본값
+            studyDayKo = "";
         }
         model.addAttribute("studyDayKo", studyDayKo);
 
-        // msg가 null이거나 빈 문자열인 경우 model에서 제거
         if (msg == null || msg.trim().isEmpty()) {
-            model.addAttribute("msg", null); // 또는 model.remove("msg");
+            model.addAttribute("msg", null);
         }
 
         return "admin/detail";
@@ -88,7 +86,6 @@ public class AdminController {
     public String deleteStudy(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         StudyPost post = studyPostService.findById(id);
 
-        // ✅ 삭제 제한 조건 추가
         boolean hasApproved = applicationService.hasApprovedApplicants(post);
         if (hasApproved) {
             redirectAttributes.addFlashAttribute("msg", "스터디에 가입한 인원이 있어 삭제가 불가능 합니다.");
@@ -100,7 +97,6 @@ public class AdminController {
         return "redirect:/admin/list";
     }
 
-    // 새로운 스터디 생성
     @GetMapping("/new")
     public String createForm(Model model) {
         model.addAttribute("studyPost", new StudyPost());
@@ -109,7 +105,7 @@ public class AdminController {
 
     @PostMapping("/new")
     public String create(@ModelAttribute StudyPost post) {
-        System.out.println("생성 시 수업 요일: " + post.getWeekdayOrWeekend()); // 👈 이 줄 추가
+        System.out.println("생성 시 수업 요일: " + post.getWeekdayOrWeekend());
         post.setCreatedDate(LocalDateTime.now());
         post.setDeadline(post.getCreatedDate().plusDays(post.getDuration()).toLocalDate());
         post.setWriter("익명 사용자");
@@ -117,13 +113,11 @@ public class AdminController {
         return "redirect:/admin/list";
     }
 
-    // 스터디 수정
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         StudyPost post = studyPostService.findById(id);
         model.addAttribute("studyPost", post);
 
-        // 수업 요일 정보를 템플릿에서 사용하기 위한 플래그 추가
         if (post.getWeekdayOrWeekend() != null) {
             model.addAttribute("isWeekday", post.getWeekdayOrWeekend().equals("weekday"));
             model.addAttribute("isWeekend", post.getWeekdayOrWeekend().equals("weekend"));
@@ -140,18 +134,16 @@ public class AdminController {
         StudyPost existingPost = studyPostService.findById(id);
         if (existingPost != null) {
             post.setCreatedDate(existingPost.getCreatedDate());
-            post.setClosed(existingPost.getClosed()); // 기존 closed 값 유지
-            // duration을 기반으로 deadline을 새롭게 설정
+            post.setClosed(existingPost.getClosed());
             post.setDeadline(post.getCreatedDate().plusDays(post.getDuration()).toLocalDate());
             studyPostService.save(post);
             return "redirect:/admin/" + id;
         } else {
-            // 해당 ID의 스터디가 없을 경우 처리 (예: 오류 메시지, 리다이렉트)
             return "redirect:/admin/list?error=notfound";
         }
     }
 
-    // 📄 관리자 스터디 신청자 목록 처리
+    // 관리자 스터디 신청자 목록 처리
     @GetMapping("/applications")
     public String applicationList(Model model) {
         model.addAttribute("applications", applicationService.findAll());

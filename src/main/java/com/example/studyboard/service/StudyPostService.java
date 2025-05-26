@@ -18,6 +18,11 @@ public class StudyPostService {
         return studyPostRepository.findAll();
     }
 
+    // 마감일 순 정렬된 모든 스터디글 조회
+    public List<StudyPost> findAllOrderByDeadline() {
+        return studyPostRepository.findAllByOrderByDeadlineAsc();
+    }
+
     // ID로 스터디글 조회
     public StudyPost findById(Long id) {
         return studyPostRepository.findById(id).orElse(null);
